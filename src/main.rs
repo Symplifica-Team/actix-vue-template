@@ -5,15 +5,15 @@ use sailfish::TemplateOnce;
 #[derive(TemplateOnce)]
 #[template(path = "index.html")]
 struct Index {
-    items: Vec<String>,
+    items: String
 }
 
 #[get("/")]
 async fn index() -> impl Responder {
-    let ctx = Index {
-        items: vec![String::from("Manzana"), String::from("Pera")],
-    };
-    HttpResponse::Ok().body(ctx.render_once().unwrap())
+    let items = vec!["Apple", "Banana", "Cherry"];
+    let items_json = serde_json::to_string(&items).unwrap();
+    let view_template = Index { items: items_json }.render_once().unwrap();
+    HttpResponse::Ok().body(view_template)
 }
 
 #[post("/echo")]

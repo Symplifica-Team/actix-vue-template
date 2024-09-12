@@ -76,7 +76,7 @@
     const app = createApp({
         data() {
           return {
-            items: [<% for item in &self.items { %>"<%= item %>",<% } %>],
+            items: JSON.parse(`<%- self.items %>`),
             name: '',
             nameRules: [
               v => !!v || 'Name is required',
