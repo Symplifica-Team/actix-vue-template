@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <% include!("./css.html"); %>
+  </head>
+
+
+  <body>
+
+    <div id="app">
+      <v-sheet class="mx-auto" width="300">
+
+        <v-form ref="form">
+          <v-text-field
+            v-model="name"
+            :counter="10"
+            :rules="nameRules"
+            label="Name"
+            required
+          ></v-text-field>
+
+          <v-select
+            v-model="select"
+            :items="items"
+            :rules="[v => !!v || 'Item is required']"
+            label="Item"
+            required
+          ></v-select>
+
+          <v-checkbox
+            v-model="checkbox"
+            :rules="[v => !!v || 'You must agree to continue!']"
+            label="Do you agree?"
+            required
+          ></v-checkbox>
+
+          <div class="d-flex flex-column">
+            <v-btn
+              class="mt-4"
+              color="success"
+              block
+              @click="validate"
+            >
+              Validate
+            </v-btn>
+
+            <v-btn
+              class="mt-4"
+              color="error"
+              block
+              @click="reset"
+            >
+              Reset Form
+            </v-btn>
+
+            <v-btn
+              class="mt-4"
+              color="warning"
+              block
+              @click="resetValidation"
+            >
+              Reset Validation
+            </v-btn>
+          </div>
+        </v-form>
+      </v-sheet>
+    </div>
+  </body>
+
+
+  <% include!("./scripts.html"); %>
+  <script>
+    const {createApp} = Vue
+    const {createVuetify} = Vuetify
+    const vuetify = createVuetify()
+
+    const app = createApp({
+        data() {
+          return {
+            items: [<% for item in &self.items { %>"<%= item %>",<% } %>],
+            name: '',
+            nameRules: [
+              v => !!v || 'Name is required',
+              v => (v && v.length <= 10) || 'Name must be 10 characters or less',
+            ],
+            select: null,
+            checkbox: false,
+          }
+        },
+        mounted() {
+           
+        },
+        methods: {
+          async validate () {
+            const { valid } = await this.$refs.form.validate()
+
+            if (valid) alert('Form is valid')
+          },
+          reset () {
+            this.$refs.form.reset()
+          },
+          resetValidation () {
+            this.$refs.form.resetValidation()
+          },
+        },
+    });
+    app.use(vuetify);
+    app.mount("#app")
+  </script
+</html>
